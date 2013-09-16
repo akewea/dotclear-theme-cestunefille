@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="{{tpl:BlogLanguage}}">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="MSSmartTagsPreventParsing" content="TRUE" />
+  <title>{{tpl:BlogName encode_html="1"}}</title>
+  
+  <link rel="contents" title="{{tpl:lang Archives}}" href="{{tpl:BlogArchiveURL}}" />
+  <tpl:Categories>
+  <link rel="section" href="{{tpl:CategoryURL}}" title="{{tpl:CategoryTitle encode_html="1"}}" />
+  </tpl:Categories>
+  
+  <tpl:Entries no_content="1">
+    <tpl:EntriesHeader>
+      <tpl:Pagination>
+        <tpl:PaginationIf end="0">
+        <link rel="previous" title="{{tpl:lang previous entries}}" href="{{tpl:PaginationURL offset="1"}}" />
+        </tpl:PaginationIf>
+        
+        <tpl:PaginationIf start="0">
+        <link rel="next" title="{{tpl:lang next entries}}" href="{{tpl:PaginationURL offset="-1"}}" />
+        </tpl:PaginationIf>
+      </tpl:Pagination>
+    </tpl:EntriesHeader>
+    
+    <link rel="chapter" href="{{tpl:EntryURL}}" title="{{tpl:EntryTitle encode_html="1"}}" />
+  </tpl:Entries>
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="{{tpl:BlogFeedURL type="rss2"}}" />
+  <link rel="alternate" type="application/atom+xml" title="Atom 1.0" href="{{tpl:BlogFeedURL type="atom"}}" />
+  <link rel="EditURI" type="application/rsd+xml" title="RSD" href="{{tpl:BlogRSDURL}}" />
+  <link rel="meta" type="application/xbel+xml" title="Blogroll" href="{{tpl:BlogrollXbelLink}}" />
+  
+  {{tpl:include src="_head.html"}}
+</head>
+
+<body class="dc-home">
+
+<div id="page">
+
+<div id="head"></div>
+
+<div id="wrapper">
+	
+{{tpl:include src="_top.html"}}
+
+<div id="main">
+	<div id="content">
+	<tpl:Entries>
+		<div class="post {{tpl:EntryIfOdd}} {{tpl:EntryIfFirst}}">
+		
+		<h2 id="p{{tpl:EntryID}}" class="post-title">{{tpl:EntryTitle encode_html="1"}}</h2>
+		
+		<p class="post-info">Le {{tpl:EntryDate}} à {{tpl:EntryTime}}</p>
+		
+		<!-- # Entry with an excerpt -->
+		<tpl:EntryIf extended="1">
+		<div class="post-content">{{tpl:EntryExcerpt}}{{tpl:EntryContent}}</div>
+		</tpl:EntryIf>
+		
+		<!-- # Entry without excerpt -->
+		<tpl:EntryIf extended="0">
+		<div class="post-content">{{tpl:EntryContent}}</div>
+		</tpl:EntryIf>
+		
+		<tpl:EntriesFooter>
+		<tpl:Pagination>
+		<p class="pagination">
+			<tpl:PaginationIf end="0">
+			<a href="{{tpl:PaginationURL offset="+1"}}" class="prev">Photos pr&eacute;c&eacute;dentes</a> 
+			</tpl:PaginationIf>
+			<tpl:PaginationIf start="0">
+			<a href="{{tpl:PaginationURL offset="-1"}}" class="next">Photos suivantes</a>
+			</tpl:PaginationIf>
+		</p>
+		</tpl:Pagination>
+		</tpl:EntriesFooter>
+		
+		</div>
+	</tpl:Entries>
+	</div>
+  
+</div> <!-- End #main -->
+
+</div> <!-- End #wrapper -->
+
+{{tpl:include src="_footer.html"}}
+
+</div> <!-- End #page -->
+</body>
+</html>

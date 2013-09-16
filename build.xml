@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="Akewea Blog theme" default="deploy" basedir="./">
+
+	<property file="build.properties" />
+
+	<property name="src.dir" location="src" />
+	<property name="deploy.dir" location="${THEMES_TEST_DIR}/${theme.dir}" />
+	<property name="package.dir" location="package" />
+	<property name="tmp.dir" location="tmp" />
+
+	<!-- Définition des fichiers à inclure -->
+	<fileset dir="${src.dir}" id="theme.path">
+		<include name="**/*.php" />
+		<include name="**/*.po" />
+		<include name="**/*.css" />
+		<include name="**/*.js" />
+		<include name="**/*.xml" />
+		<include name="**/*.html" />
+		<include name="**/*.htm" />
+		<include name="**/*.jpg" />
+		<include name="**/*.jpeg" />
+		<include name="**/*.png" />
+		<include name="**/*.gif" />
+		<include name="**/*.swf" />
+		<include name="smilies/**/*" />
+		<include name="LICENCE" />
+		
+		<exclude name="maquette/**/*" />
+		<exclude name="fla/**/*" />
+	</fileset>
+
+	<!-- Déploie le theme en local -->
+	<target name="deploy" description="Déploie le theme à l'endroit indiqué">
+
+		<!-- On supprime le répertoire de destination s'il existe déjà -->
+		<delete dir="${deploy.dir}" verbose="false" failonerror="false" />
+
+		<!-- On copie le contenu du theme -->
+		<copy todir="${deploy.dir}">
+			<fileset refid="theme.path" />
+		</copy>
+
+		<!-- On modifie les infos du theme -->
+		<antcall target="replaceInfos">
+			<param name="dir" value="${deploy.dir}" />
+		</antcall>
+
+	</target>
+
+	<!-- Prépare l'archive ZIP à distribuer -->
+	<target name="package" description="Créé l'archive ZIP pour le thème">
+
+		<!-- On supprime le répertoire temporaire s'il existe déjà -->
+		<delete dir="${tmp.dir}/${theme.dir}" verbose="false" failonerror="false" />
+
+		<!-- On copie tout ce qu'il faut dans un répertoire temporaire -->
+		<copy todir="${tmp.dir}/${theme.dir}">
+			<fileset refid="theme.path" />
+		</copy>
+
+		<!-- On modifie les infos du theme -->
+		<antcall target="replaceInfos">
+			<param name="dir" value="${tmp.dir}/${theme.dir}" />
+		</antcall>
+
+		<mkdir dir="${package.dir}" />
+
+		<!-- On supprime le zip s'il existe déjà -->
+		<delete file="${package.dir}/theme-${theme.dir}-${theme.version}.zip" verbose="false" failonerror="false" />
+
+		<!-- On ZIP le répertoire temporaire -->
+		<zip destfile="${package.dir}/theme-${theme.dir}-${theme.version}.zip">
+			<fileset dir="${tmp.dir}" />
+		</zip>
+
+		<!-- On supprime le répertoire temporaire -->
+		<delete dir="${tmp.dir}" verbose="false" failonerror="false" />
+
+	</target>
+
+	<!-- Modifie les infos du theme -->
+	<target name="replaceInfos">
+		<property name="dir" value="${tmp.dir}" />
+
+		<replace file="${dir}/_define.php">
+			<replacefilter token="@@name@@" value="${theme.name}" />
+			<replacefilter token="@@description@@" value="${theme.description}" />
+			<replacefilter token="@@author@@" value="${theme.author}" />
+			<replacefilter token="@@version@@" value="${theme.version}" />
+		</replace>
+		
+		<replace dir="${dir}">
+			<replacefilter token="//@@licence@@" value="${theme.licence}" />
+			<replacefilter token="@@licence@@" value="${theme.licence}" />
+		</replace>
+	</target>
+
+</project>
